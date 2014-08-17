@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:component-scan base-package="com.baron.aop" />
+	
+	<!-- 웹에 특화된 인터셉터, 인자값은 HttpRequest, HttpResponse로.. -->
+	<mvc:interceptors>
+		<bean class="com.baron.aop.interceptor.GlobalInterceptor"/>
+	</mvc:interceptors>
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+            <!-- url 패턴에 따라 적용되는 인터셉터 -->
+			<mvc:mapping path="/*"/>
+			<bean class="com.baron.aop.interceptor.LocalInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	
+	<!-- AOP를 이용할 수 있게함 -->
+	<aop:aspectj-autoproxy />
+	
+	<bean id="classInterceptor" class="com.baron.aop.interceptor.ClassInterceptor" />
+	<bean id="iFInterceptor" class="com.baron.aop.interceptor.IFInterceptor" />
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+</beans>
